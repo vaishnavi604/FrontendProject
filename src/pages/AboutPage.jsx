@@ -1,40 +1,174 @@
 import React from "react";
+import { FaEye, FaBullseye, FaHandsHelping } from "react-icons/fa";
 
 function AboutPage() {
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", lineHeight: "1.6" }}>
-      {/* Hero Section */}
-      <section style={{ backgroundColor: "#fdf0f6", padding: "60px 40px", textAlign: "center" }}>
-        <h1 style={{ fontSize: "3rem", color: "#d6366c", marginBottom: "20px" }}>About Wezen Telecom</h1>
-        <p style={{ fontSize: "1.2rem", maxWidth: "800px", margin: "0 auto", color: "#444" }}>
-          Wezen Telecom is dedicated to connecting people and businesses with high-speed internet and reliable communication solutions. 
-          Our mission is to provide seamless connectivity, affordable plans, and cutting-edge telecom services to everyone.
+    <div
+      style={{
+        fontFamily: "'Inter', sans-serif",
+        background: "linear-gradient(to bottom, #ae7bceff 45%, #ffffff 55%)",
+        minHeight: "100vh",
+        padding: "60px 40px",
+      }}
+    >
+      {/* Top Section */}
+      <section style={{ textAlign: "center", marginBottom: "50px" }}>
+        <h1
+          style={{
+            fontSize: "3rem",
+            color: "#1a1a1a",
+            fontWeight: "700",
+            marginBottom: "20px",
+          }}
+        >
+          About Us
+        </h1>
+        <p
+          style={{
+            fontSize: "1.2rem",
+            color: "#444",
+            maxWidth: "750px",
+            margin: "0 auto",
+            lineHeight: "1.8",
+          }}
+        >
+          At <b style={{ color: "#6A1DAZ" }}>Wezen Telecom</b>, we connect people
+          with technology through seamless communication services. Our mission
+          is simple: <b>innovation, reliability, and a customer-first approach.</b>
         </p>
       </section>
 
-      {/* Vision / Mission / Values */}
-      <section style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", padding: "60px 40px", gap: "40px" }}>
-        <div style={{ maxWidth: "300px", textAlign: "center" }}>
-          <h3 style={{ fontSize: "1.5rem", color: "#9b287b" }}>Our Vision</h3>
-          <p>To be the leading telecom provider delivering innovative and reliable connectivity solutions worldwide.</p>
-        </div>
-        <div style={{ maxWidth: "300px", textAlign: "center" }}>
-          <h3 style={{ fontSize: "1.5rem", color: "#9b287b" }}>Our Mission</h3>
-          <p>Empowering communities and businesses through fast, affordable, and dependable communication networks.</p>
-        </div>
-        <div style={{ maxWidth: "300px", textAlign: "center" }}>
-          <h3 style={{ fontSize: "1.5rem", color: "#9b287b" }}>Our Values</h3>
-          <p>Innovation, Reliability, Customer-first approach, and Sustainability in every service we provide.</p>
-        </div>
-      </section>
+      {/* Images Section */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "25px",
+          flexWrap: "wrap",
+          marginBottom: "70px",
+        }}
+      >
+        {[
+          {
+            src: "https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg",
+            alt: "Team Work",
+          },
+          {
+            src: "https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg",
+            alt: "Work Discussion",
+          },
+          {
+            src: "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg",
+            alt: "Brainstorming",
+          },
+          {
+            src: "https://images.pexels.com/photos/4065876/pexels-photo-4065876.jpeg",
+            alt: "Online Meeting",
+          },
+        ].map((image, index) => (
+          <img
+            key={index}
+            src={image.src}
+            alt={image.alt}
+            style={{
+              width: "240px",
+              height: "160px",
+              borderRadius: "16px",
+              objectFit: "cover",
+              boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
+              transition: "transform 0.4s ease, box-shadow 0.4s ease",
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "scale(1.07)";
+              e.currentTarget.style.boxShadow = "0 10px 25px rgba(0,0,0,0.25)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+              e.currentTarget.style.boxShadow = "0 6px 18px rgba(0,0,0,0.12)";
+            }}
+          />
+        ))}
+      </div>
 
-      {/* Why Choose Us */}
-      <section style={{ backgroundColor: "#fff0f6", padding: "60px 40px", textAlign: "center" }}>
-        <h2 style={{ fontSize: "2rem", color: "#d6366c", marginBottom: "20px" }}>Why Choose Wezen?</h2>
-        <p style={{ maxWidth: "700px", margin: "0 auto", color: "#555" }}>
-          With state-of-the-art infrastructure and customer-centric services, Wezen Telecom ensures uninterrupted connectivity, 
-          lightning-fast internet, and reliable support to help you stay connected wherever you are.
-        </p>
+      {/* Values Section */}
+      <section
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: "35px",
+          padding: "20px",
+        }}
+      >
+        {[
+          {
+            icon: <FaEye size={28} color="#fff" />,
+            title: "Our Vision",
+            desc: "To be the leading telecom provider delivering innovative and reliable solutions worldwide.",
+          },
+          {
+            icon: <FaBullseye size={28} color="#fff" />,
+            title: "Our Mission",
+            desc: "Empowering communities and businesses through affordable and dependable networks.",
+          },
+          {
+            icon: <FaHandsHelping size={28} color="#fff" />,
+            title: "Our Values",
+            desc: "Innovation, Reliability, and a Customer-first approach in everything we do.",
+          },
+        ].map((card, index) => (
+          <div
+            key={index}
+            style={{
+              background: "white",
+              padding: "35px 25px",
+              borderRadius: "18px",
+              boxShadow: "0 8px 22px rgba(0,0,0,0.1)",
+              textAlign: "center",
+              width: "300px",
+              transition: "transform 0.3s ease, box-shadow 0.3s ease",
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-10px)";
+              e.currentTarget.style.boxShadow = "0 12px 30px rgba(0,0,0,0.2)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 8px 22px rgba(0,0,0,0.1)";
+            }}
+          >
+            <div
+              style={{
+                background: "#9b39d7ff",
+                width: "60px",
+                height: "60px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 20px auto",
+                boxShadow: "0 4px 12px rgba(214,54,108,0.4)",
+              }}
+            >
+              {card.icon}
+            </div>
+            <h3
+              style={{
+                fontSize: "1.6rem",
+                color: "#222",
+                margin: "15px 0",
+                fontWeight: "600",
+              }}
+            >
+              {card.title}
+            </h3>
+            <p style={{ color: "#555", fontSize: "1rem", lineHeight: "1.6" }}>
+              {card.desc}
+            </p>
+          </div>
+        ))}
       </section>
     </div>
   );

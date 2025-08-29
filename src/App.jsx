@@ -8,6 +8,8 @@ import SignupPage from "./pages/SignupPage";
 import PrepaidPlansPage from "./pages/PrepaidPlansPage";
 import PostpaidPlansPage from "./pages/PostpaidPlansPage";
 import ComplaintsPage from "./pages/ComplaintsPage";
+import ComplaintDetails from "./pages/ComplaintDetails";
+
 
 export default function App() {
   return (
@@ -20,7 +22,9 @@ export default function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/prepaid" element={<PrepaidPlansPage />} />
       <Route path="/postpaid" element={<PostpaidPlansPage />} />
-      <Route path="/complaints" element={<ComplaintsPage />} />
+     <Route path="/complaints" element={<ComplaintsPage />} />
+<Route path="/complaint-details" element={<ComplaintDetails />} />
+
     </Routes>
   );
 }

@@ -8,9 +8,11 @@ import SignupPage from "./pages/SignupPage";
 import PrepaidPlansPage from "./pages/PrepaidPlansPage";
 import PostpaidPlansPage from "./pages/PostpaidPlansPage";
 import ComplaintsPage from "./pages/ComplaintsPage";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function App() {
   return (
+    <AuthProvider>
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/explore" element={<ExplorePage />} />
@@ -22,5 +24,6 @@ export default function App() {
       <Route path="/postpaid" element={<PostpaidPlansPage />} />
       <Route path="/complaints" element={<ComplaintsPage />} />
     </Routes>
+    </AuthProvider>
   );
 }

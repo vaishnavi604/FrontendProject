@@ -1,214 +1,209 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext"; // adjust the path
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function SignupPage() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = useState({});
+
+export default function SignupPage() {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const validate = () => {
-    const errs = {};
-    if (!formData.fullName) errs.fullName = "Full Name is required";
-    if (!formData.email) errs.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Email is invalid";
-    if (!formData.phone) errs.phone = "Phone Number is required";
-    else if (!/^\d{10,15}$/.test(formData.phone)) errs.phone = "Phone number is invalid";
-    if (!formData.password) errs.password = "Password is required";
-    if (!formData.confirmPassword) errs.confirmPassword = "Confirm Password is required";
-    if (
-      formData.password &&
-      formData.confirmPassword &&
-      formData.password !== formData.confirmPassword
-    )
-      errs.confirmPassword = "Passwords do not match";
+  const [formData, setFormData] = useState({
+    name: "",
+    mail: "",      // ✅ backend expects 'mail'
+    password: "",
+    phoneNo: ""    // ✅ backend expects 'phoneNo'
+  });
+  const [error, setError] = useState("");
 
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      alert("Signing up...");
+    setError("");
+
+    try {
+      const res = await fetch("http://localhost:8084/api/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        throw new Error("Signup failed");
+      }
+
+      const data = await res.json();
+      login(data.token); 
+      localStorage.setItem("userInfo", JSON.stringify(data.userInfo)); 
+      navigate("/explore");
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  const handleClose = () => {
-    navigate("/");
-  };
-
   return (
-    <div
-      style={{
-        fontFamily: "Arial, sans-serif",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background:
-          "url('https://images.unsplash.com/photo-1567427018141-0584cfcbf1c5?auto=format&fit=crop&w=1950&q=80') no-repeat center/cover",
-        backdropFilter: "blur(2px)",
-        position: "relative",
-        padding: "20px",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0,0,0,0.2)",
-          backdropFilter: "blur(2px)",
-          zIndex: 0,
-        }}
-      ></div>
+  <>
+    <style>{`
+      .signup-container {
+        max-width: 400px;
+        margin: 60px auto;
+        padding: 30px;
+        background-color: #f7f7f7;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+      }
 
-      <div
-        style={{
-          position: "relative",
-          background: "rgba(255, 255, 255, 0.97)",
-          padding: "50px 40px",
-          borderRadius: "25px",
-          width: "100%",
-          maxWidth: "450px",
-          boxShadow: "0 15px 40px rgba(0,0,0,0.15)",
-          zIndex: 1,
-          boxSizing: "border-box",
-        }}
-      >
-        {/* Close button */}
-        <button
-          onClick={handleClose}
-          style={{
-            position: "absolute",
-            top: "15px",
-            right: "15px",
-            background: "transparent",
-            border: "none",
-            fontSize: "1.5rem",
-            cursor: "pointer",
-            color: "#999",
-            transition: "color 0.2s",
-          }}
-          aria-label="Close"
-          onMouseOver={(e) => (e.currentTarget.style.color = "#d6366c")}
-          onMouseOut={(e) => (e.currentTarget.style.color = "#999")}
-        >
-          &times;
-        </button>
+      .signup-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+      }
 
-        <h2
-          style={{
-            textAlign: "center",
-            color: "#d6366c",
-            marginBottom: "30px",
-            fontWeight: "700",
-          }}
-        >
-          Welcome to Wezen
-        </h2>
+      .signup-form {
+        display: flex;
+        flex-direction: column;
+      }
 
-        <form onSubmit={onSubmit} noValidate>
+      .signup-form label {
+        margin-bottom: 15px;
+        font-weight: 500;
+        color: #444;
+        font-size: 14px;
+      }
+
+      .signup-form input {
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+
+      .signup-form input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+      }
+
+      .signup-form button {
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+      }
+
+      .signup-form button:hover {
+        background-color: #0056b3;
+      }
+
+      .error-message {
+        color: red;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+      }
+
+      .login-prompt {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #555;
+      }
+
+      .login-prompt a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 600;
+        margin-left: 5px;
+      }
+
+      .login-prompt a:hover {
+        text-decoration: underline;
+      }
+    `}</style>
+
+    <div className="signup-container">
+      <h2>Sign Up</h2>
+      <form onSubmit={handleSubmit} className="signup-form">
+        <label>
+          Full Name
           <input
-            placeholder="Full Name"
-            value={formData.fullName}
-            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-            style={{ ...inputStyle, borderColor: errors.fullName ? "#d6366c" : "#ccc" }}
+            type="text"
+            name="name"
+            placeholder="John Doe"
+            value={formData.name}
+            onChange={handleChange}
+            required
           />
-          {errors.fullName && <p style={errorText}>{errors.fullName}</p>}
+        </label>
 
+        <label>
+          Email
           <input
-            placeholder="Email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            style={{ ...inputStyle, borderColor: errors.email ? "#d6366c" : "#ccc" }}
+            type="email"
+            name="mail"
+            placeholder="example@mail.com"
+            value={formData.mail}
+            onChange={handleChange}
+            required
           />
-          {errors.email && <p style={errorText}>{errors.email}</p>}
+        </label>
 
-          <input
-            placeholder="Phone Number"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            style={{ ...inputStyle, borderColor: errors.phone ? "#d6366c" : "#ccc" }}
-          />
-          {errors.phone && <p style={errorText}>{errors.phone}</p>}
-
+        <label>
+          Password
           <input
             type="password"
-            placeholder="Password"
+            name="password"
+            placeholder="Enter password"
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            style={{ ...inputStyle, borderColor: errors.password ? "#d6366c" : "#ccc" }}
+            onChange={handleChange}
+            required
           />
-          {errors.password && <p style={errorText}>{errors.password}</p>}
+        </label>
 
+        <label>
+          Confirm Password
           <input
             type="password"
-            placeholder="Confirm Password"
+            name="confirmPassword"
+            placeholder="Re-enter password"
             value={formData.confirmPassword}
-            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-            style={{ ...inputStyle, borderColor: errors.confirmPassword ? "#d6366c" : "#ccc" }}
+            onChange={handleChange}
+            required
           />
-          {errors.confirmPassword && <p style={errorText}>{errors.confirmPassword}</p>}
+        </label>
 
-          <button type="submit" style={buttonStyle}>
-            Signup
-          </button>
-        </form>
+        <label>
+          Phone Number
+          <input
+            type="text"
+            name="phoneNo"
+            placeholder="1234567890"
+            value={formData.phoneNo}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
-        <p style={{ marginTop: "20px", textAlign: "center", color: "#555" }}>
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            style={{ color: "#d6366c", fontWeight: "bold", textDecoration: "none" }}
-          >
-            Login
-          </Link>
-        </p>
+        <button type="submit">Sign Up</button>
+      </form>
+
+      <div className="login-prompt">
+        Already have an account?
+        <Link to="/login">Login</Link>
       </div>
+
+      {error && <p className="error-message">{error}</p>}
     </div>
-  );
+  </>
+);
 }
-
-const inputStyle = {
-  display: "block",
-  margin: "12px 0",
-  padding: "12px",
-  width: "100%",
-  borderRadius: "10px",
-  border: "1px solid #ccc",
-  outline: "none",
-  transition: "border-color 0.2s",
-  fontSize: "1rem",
-  boxSizing: "border-box",
-};
-
-const buttonStyle = {
-  background: "#d6366c",
-  color: "#fff",
-  padding: "14px",
-  width: "100%",
-  borderRadius: "25px",
-  border: "none",
-  fontWeight: "bold",
-  cursor: "pointer",
-  marginTop: "20px",
-  transition: "background-color 0.2s",
-};
-
-const errorText = {
-  color: "#d6366c",
-  marginTop: "4px",
-  marginBottom: "0",
-  fontSize: "0.85rem",
-};
-
-export default SignupPage;

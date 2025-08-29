@@ -9,10 +9,15 @@ import PrepaidPlansPage from "./pages/PrepaidPlansPage";
 import PostpaidPlansPage from "./pages/PostpaidPlansPage";
 import ComplaintsPage from "./pages/ComplaintsPage";
 import ComplaintDetails from "./pages/ComplaintDetails";
+import PlanDetailsPage from "./pages/PlanDetailsPage";
+import PostpaidPlanDetailsPage from "./pages/PostpaidPlanDetailsPage";
+
+import { AuthProvider } from "./context/AuthContext";
 
 
 export default function App() {
   return (
+    <AuthProvider>
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/explore" element={<ExplorePage />} />
@@ -24,7 +29,10 @@ export default function App() {
       <Route path="/postpaid" element={<PostpaidPlansPage />} />
      <Route path="/complaints" element={<ComplaintsPage />} />
 <Route path="/complaint-details" element={<ComplaintDetails />} />
+  <Route path="/postpaid-plan/:id" element={<PostpaidPlanDetailsPage />} />
+        <Route path="/plan/:id" element={<PlanDetailsPage />} />
 
     </Routes>
+    </AuthProvider>
   );
 }

@@ -1,175 +1,177 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext"; // adjust the path
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();  // useNavigate hook
 
-  const validate = () => {
-    const errs = {};
-    if (!email) errs.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(email)) errs.email = "Email is invalid";
-    if (!password) errs.password = "Password is required";
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
+export default function LoginPage() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      alert("Logging in...");
+    setError("");
+
+    try {
+      const res = await fetch("http://localhost:8084/api/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        throw new Error("Invalid email or password");
+      }
+
+      const data = await res.json();
+      login(data.token); // ✅ call from AuthContext
+      localStorage.setItem("userInfo", JSON.stringify(data.userInfo)); // optional
+      navigate("/explore"); // redirect wherever you want
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  // Close button handler navigates back to Landing page
-  const handleClose = () => {
-    navigate("/");
-  };
+return (
+  <>
+    <style>{`
+      .login-container {
+        max-width: 400px;
+        margin: 60px auto;
+        padding: 40px 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-  return (
-    <div
-      style={{
-        fontFamily: "Arial, sans-serif",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background:
-          "url('https://images.unsplash.com/photo-1567427018141-0584cfcbf1c5?auto=format&fit=crop&w=1950&q=80') no-repeat center/cover",
-        backdropFilter: "blur(2px)",
-        position: "relative",
-        padding: "20px",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0,0,0,0.2)",
-          backdropFilter: "blur(2px)",
-          zIndex: 0,
-        }}
-      ></div>
+      .login-container h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+        font-size: 28px;
+      }
 
-      <div
-        style={{
-          position: "relative",
-          background: "rgba(255, 255, 255, 0.97)",
-          padding: "50px 40px",
-          borderRadius: "25px",
-          width: "100%",
-          maxWidth: "400px",
-          boxShadow: "0 15px 40px rgba(0,0,0,0.15)",
-          zIndex: 1,
-          boxSizing: "border-box",
-        }}
-      >
-        {/* Close button */}
-        <button
-          onClick={handleClose}
-          style={{
-            position: "absolute",
-            top: "15px",
-            right: "15px",
-            background: "transparent",
-            border: "none",
-            fontSize: "1.5rem",
-            cursor: "pointer",
-            color: "#999",
-            transition: "color 0.2s",
-          }}
-          aria-label="Close"
-          onMouseOver={(e) => (e.currentTarget.style.color = "#d6366c")}
-          onMouseOut={(e) => (e.currentTarget.style.color = "#999")}
-        >
-          &times;
-        </button>
+      .login-form {
+        display: flex;
+        flex-direction: column;
+      }
 
-        <h2
-          style={{
-            textAlign: "center",
-            color: "#d6366c",
-            marginBottom: "30px",
-            fontWeight: "700",
-          }}
-        >
-          Welcome to Wezen
-        </h2>
+      .login-form input {
+        padding: 12px 14px;
+        margin-bottom: 18px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: 0.2s ease-in-out;
+      }
 
-        <form onSubmit={onSubmit} noValidate>
-          <input
-            placeholder="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            style={{ ...inputStyle, borderColor: errors.email ? "#d6366c" : "#ccc" }}
-          />
-          {errors.email && <p style={errorText}>{errors.email}</p>}
+      .login-form input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 6px rgba(0, 123, 255, 0.2);
+      }
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ ...inputStyle, borderColor: errors.password ? "#d6366c" : "#ccc" }}
-          />
-          {errors.password && <p style={errorText}>{errors.password}</p>}
+      .login-form button {
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-          <button type="submit" style={buttonStyle}>
-            Login
-          </button>
-        </form>
+      .login-form button:hover {
+        background-color: #0056b3;
+      }
 
-        <p style={{ marginTop: "20px", textAlign: "center", color: "#555" }}>
-          Don't have an account?{" "}
-          <Link
-            to="/signup"
-            style={{ color: "#d6366c", fontWeight: "bold", textDecoration: "none" }}
-          >
-            Signup
-          </Link>
-        </p>
+      .login-links {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+        font-size: 14px;
+      }
+
+      .login-links a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .login-links a:hover {
+        text-decoration: underline;
+      }
+
+      .signup-prompt {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #555;
+      }
+
+      .signup-prompt a {
+        color: #007bff;
+        text-decoration: none;
+        margin-left: 5px;
+        font-weight: 500;
+      }
+
+      .signup-prompt a:hover {
+        text-decoration: underline;
+      }
+
+      .error-message {
+        color: red;
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+      }
+    `}</style>
+
+    <div className="login-container">
+      <h2>Welcome Back</h2>
+      <form onSubmit={handleSubmit} className="login-form">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+
+        <button type="submit">Login</button>
+      </form>
+
+      <div className="login-links">
+        <a href="#">Forgot Password?</a>
+        <Link to="/signup">Create Account</Link>
       </div>
+
+      <div className="signup-prompt">
+        Don't have an account?
+        <Link to="/signup">Sign up</Link>
+      </div>
+
+      {error && <p className="error-message">{error}</p>}
     </div>
-  );
+  </>
+);
 }
-
-const inputStyle = {
-  display: "block",
-  margin: "12px 0",
-  padding: "12px",
-  width: "100%",
-  borderRadius: "10px",
-  border: "1px solid #ccc",
-  outline: "none",
-  transition: "border-color 0.2s",
-  fontSize: "1rem",
-  boxSizing: "border-box",
-};
-
-const buttonStyle = {
-  background: "#d6366c",
-  color: "#fff",
-  padding: "14px",
-  width: "100%",
-  borderRadius: "25px",
-  border: "none",
-  fontWeight: "bold",
-  cursor: "pointer",
-  marginTop: "20px",
-  transition: "background-color 0.2s",
-};
-
-const errorText = {
-  color: "#d6366c",
-  marginTop: "4px",
-  marginBottom: "0",
-  fontSize: "0.85rem",
-};
-
-export default LoginPage;

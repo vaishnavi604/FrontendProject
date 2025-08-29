@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Card from "../components/Card";
+import Chatbot from "../components/Chatbot"; // ✅ import
 
 export default function LandingPage() {
-  const [chatOpen, setChatOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
   const images = [
@@ -40,7 +40,6 @@ export default function LandingPage() {
           transition: "background-image 1s ease-in-out",
         }}
       >
-        {/* Overlay */}
         <div
           style={{
             position: "absolute",
@@ -52,8 +51,6 @@ export default function LandingPage() {
             zIndex: 1,
           }}
         />
-
-        {/* Hero Text */}
         <div style={{ zIndex: 2, maxWidth: "600px" }}>
           <h1 style={{ fontSize: "3.5rem", fontWeight: "bold", marginBottom: "20px" }}>
             TV on Every Screen. <br />
@@ -102,68 +99,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Chatbot */}
-      <div style={{ position: "fixed", bottom: "20px", right: "20px", zIndex: 10 }}>
-        {chatOpen && (
-          <div
-            style={{
-              width: "300px",
-              height: "400px",
-              background: "#1A1F2A",
-              border: "1px solid #444",
-              borderRadius: "10px",
-              boxShadow: "0 4px 8px rgba(0,0,0,0.4)",
-              display: "flex",
-              flexDirection: "column",
-              color: "#fff",
-            }}
-          >
-            <div
-              style={{
-                background: "#C0392B",
-                color: "#FFFFFF",
-                padding: "10px",
-                borderTopLeftRadius: "10px",
-                borderTopRightRadius: "10px",
-                fontWeight: "bold",
-              }}
-            >
-              Chatbot
-            </div>
-            <div style={{ flex: 1, padding: "10px", overflowY: "auto" }}>
-              <p>Hello 👋! How can I help you today?</p>
-            </div>
-            <input
-              type="text"
-              placeholder="Type a message..."
-              style={{
-                border: "none",
-                borderTop: "1px solid #444",
-                padding: "10px",
-                background: "#0B0F1A",
-                color: "#fff",
-                outline: "none",
-              }}
-            />
-          </div>
-        )}
-        <button
-          onClick={() => setChatOpen(!chatOpen)}
-          style={{
-            background: "#C0392B",
-            color: "#FFFFFF",
-            border: "none",
-            borderRadius: "50%",
-            width: "60px",
-            height: "60px",
-            fontSize: "1.5rem",
-            cursor: "pointer",
-            boxShadow: "0 4px 8px rgba(0,0,0,0.5)",
-          }}
-        >
-          💬
-        </button>
-      </div>
+      {/* ✅ Chatbot included */}
+      <Chatbot />
 
       <Footer />
     </div>

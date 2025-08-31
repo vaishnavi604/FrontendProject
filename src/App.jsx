@@ -30,7 +30,7 @@ export default function App() {
      <Route path="/complaints" element={<ComplaintsPage />} />
 <Route path="/complaint-details" element={<ComplaintDetails />} />
   <Route path="/postpaid-plan/:id" element={<PostpaidPlanDetailsPage />} />
-        <Route path="/plan/:id" element={<PlanDetailsPage />} />
+        <Route path="/plan-details" element={<PlanDetailsPage />} />
 
     </Routes>
     </AuthProvider>

@@ -86,7 +86,7 @@ export default function ContactPage() {
               type="submit"
               style={{
                 padding: "12px",
-                backgroundColor: "#007BFF",
+                backgroundColor: "#C0392B",
                 color: "#fff",
                 border: "none",
                 borderRadius: "5px",
@@ -149,7 +149,7 @@ export default function ContactPage() {
               type="submit"
               style={{
                 padding: "10px",
-                backgroundColor: "#007BFF",
+                backgroundColor: "#C0392B",
                 color: "#fff",
                 border: "none",
                 borderRadius: "5px",

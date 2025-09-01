@@ -6,7 +6,7 @@ function AboutPage() {
     <div
       style={{
         fontFamily: "'Inter', sans-serif",
-        background: "linear-gradient(to bottom, #ae7bceff 45%, #ffffff 55%)",
+        background: "linear-gradient(to bottom, #C0392B 45%, #ffffff 55%)",
         minHeight: "100vh",
         padding: "60px 40px",
       }}
@@ -141,7 +141,7 @@ function AboutPage() {
           >
             <div
               style={{
-                background: "#9b39d7ff",
+                background: "#721515ff",
                 width: "60px",
                 height: "60px",
                 borderRadius: "50%",

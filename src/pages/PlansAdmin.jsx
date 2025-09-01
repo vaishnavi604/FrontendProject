@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8085"; // backend base URL
+const BASE_URL = "http://localhost:8084"; // backend base URL
 
 const PlansAdmin = () => {
   const [plans, setPlans] = useState([]);
@@ -34,10 +34,9 @@ const PlansAdmin = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (Array.isArray(response.data)) {
-        // Map plan_type from backend to planType for frontend
         const formattedPlans = response.data.map((plan) => ({
           ...plan,
-          planType: plan.plan_type, // <-- mapping here
+          planType: plan.plan_type,
           dataPacks: Object.entries(plan.dataPacks || {}).map(([price, mb]) => ({
             price,
             mb,
@@ -68,7 +67,7 @@ const PlansAdmin = () => {
     try {
       const payload = {
         plan_id: newPlanData.plan_id,
-        plan_type: newPlanData.planType, // send as plan_type
+        plan_type: newPlanData.planType,
         validityDays: newPlanData.validityDays,
         dataPacks: convertDataPacksToObj(newPlanData.dataPacks),
       };
@@ -110,7 +109,7 @@ const PlansAdmin = () => {
     try {
       const payload = {
         plan_id: editFormData.plan_id,
-        plan_type: editFormData.planType, // send as plan_type
+        plan_type: editFormData.planType,
         validityDays: editFormData.validityDays,
         dataPacks: convertDataPacksToObj(editFormData.dataPacks),
       };
@@ -169,148 +168,343 @@ const PlansAdmin = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Admin - Plans</h1>
+    <div style={{ padding: "20px", maxWidth: "1100px", margin: "auto", fontFamily: "'Poppins', sans-serif" }}>
+      <h1 style={{ textAlign: "center", color: "#C0392B", marginBottom: "30px" }}>Admin - Plans</h1>
 
       {/* Add Plan Section */}
-      <div style={{ marginBottom: "30px", border: "1px solid #ccc", padding: "20px" }}>
-        <h2>Add New Plan</h2>
-        <input
-          type="number"
-          placeholder="Plan ID"
-          value={newPlanData.plan_id}
-          onChange={(e) => setNewPlanData({ ...newPlanData, plan_id: Number(e.target.value) })}
-        />
-        <input
-          type="text"
-          placeholder="Plan Type (Prepaid/Postpaid)"
-          value={newPlanData.planType}
-          onChange={(e) => setNewPlanData({ ...newPlanData, planType: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="Validity Days"
-          value={newPlanData.validityDays}
-          onChange={(e) => setNewPlanData({ ...newPlanData, validityDays: Number(e.target.value) })}
-        />
-        <h4>Data Packs</h4>
+      <div
+        style={{
+          marginBottom: "40px",
+          padding: "25px",
+          borderRadius: "12px",
+          boxShadow: "0 8px 20px rgba(107,15,186,0.2)",
+          backgroundColor: "white",
+        }}
+      >
+        <h2 style={{ marginBottom: "20px", color: "#C0392B" }}>Add New Plan</h2>
+        <div style={{ display: "flex", gap: "15px", flexWrap: "wrap", marginBottom: "20px" }}>
+          <input
+            type="number"
+            placeholder="Plan ID"
+            value={newPlanData.plan_id}
+            onChange={(e) => setNewPlanData({ ...newPlanData, plan_id: Number(e.target.value) })}
+            style={inputStyle}
+          />
+          <input
+            type="text"
+            placeholder="Plan Type (Prepaid/Postpaid)"
+            value={newPlanData.planType}
+            onChange={(e) => setNewPlanData({ ...newPlanData, planType: e.target.value })}
+            style={inputStyle}
+          />
+          <input
+            type="number"
+            placeholder="Validity Days"
+            value={newPlanData.validityDays}
+            onChange={(e) => setNewPlanData({ ...newPlanData, validityDays: Number(e.target.value) })}
+            style={inputStyle}
+          />
+        </div>
+
+        <h4 style={{ marginBottom: "10px", color: "#C0392B" }}>Data Packs</h4>
         {newPlanData.dataPacks.map((row, idx) => (
-          <div key={idx} style={{ display: "flex", gap: "10px", marginBottom: "5px" }}>
+          <div key={idx} style={{ display: "flex", gap: "10px", marginBottom: "10px", alignItems: "center" }}>
             <input
               type="text"
               placeholder="Price"
               value={row.price}
               onChange={(e) => updateDataPackRow(idx, "price", e.target.value, "new")}
+              style={{ ...inputStyle, width: "120px" }}
             />
             <input
               type="number"
               placeholder="MB"
               value={row.mb}
               onChange={(e) => updateDataPackRow(idx, "mb", e.target.value, "new")}
+              style={{ ...inputStyle, width: "120px" }}
             />
-            <button onClick={() => removeDataPackRow(idx, "new")}>Remove</button>
+            <button
+              onClick={() => removeDataPackRow(idx, "new")}
+              style={removeBtnStyle}
+              title="Remove data pack"
+            >
+              &times;
+            </button>
           </div>
         ))}
-        <button onClick={() => addDataPackRow("new")}>Add Data Pack</button>
+        <button onClick={() => addDataPackRow("new")} style={addBtnStyle}>
+          + Add Data Pack
+        </button>
         <br />
-        <button onClick={handleAddPlan}>Add Plan</button>
+        <button onClick={handleAddPlan} style={submitBtnStyle}>
+          Add Plan
+        </button>
       </div>
 
-      <button onClick={fetchPlans} style={{ marginBottom: "20px" }}>
-        View All Plans
-      </button>
+      <div style={{ textAlign: "center", marginBottom: "30px" }}>
+        <button onClick={fetchPlans} style={fetchBtnStyle}>
+          View All Plans
+        </button>
+      </div>
 
       {loading ? (
-        <p>Loading plans...</p>
+        <p style={{ textAlign: "center" }}>Loading plans...</p>
       ) : plans.length === 0 ? (
-        <p>No plans found. Click "View All Plans" to fetch.</p>
+        <p style={{ textAlign: "center", color: "#777" }}>No plans found. Click "View All Plans" to fetch.</p>
       ) : (
-        <table border="1" cellPadding="10" cellSpacing="0">
-          <thead>
-            <tr>
-              <th>Plan ID</th>
-              <th>Type</th>
-              <th>Validity (Days)</th>
-              <th>Data Packs</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {plans.map((plan) => (
-              <tr key={plan.plan_id}>
-                <td>{plan.plan_id}</td>
-                <td>
-                  {editPlanId === plan.plan_id ? (
-                    <input
-                      type="text"
-                      value={editFormData.planType}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, planType: e.target.value })
-                      }
-                    />
-                  ) : (
-                    plan.planType // <-- now visible
-                  )}
-                </td>
-                <td>
-                  {editPlanId === plan.plan_id ? (
-                    <input
-                      type="number"
-                      value={editFormData.validityDays}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, validityDays: e.target.value })
-                      }
-                    />
-                  ) : (
-                    plan.validityDays
-                  )}
-                </td>
-                <td>
-                  {editPlanId === plan.plan_id ? (
-                    <>
-                      {editFormData.dataPacks.map((row, idx) => (
-                        <div key={idx} style={{ display: "flex", gap: "10px", marginBottom: "5px" }}>
-                          <input
-                            type="text"
-                            placeholder="Price"
-                            value={row.price}
-                            onChange={(e) => updateDataPackRow(idx, "price", e.target.value, "edit")}
-                          />
-                          <input
-                            type="number"
-                            placeholder="MB"
-                            value={row.mb}
-                            onChange={(e) => updateDataPackRow(idx, "mb", e.target.value, "edit")}
-                          />
-                          <button onClick={() => removeDataPackRow(idx, "edit")}>Remove</button>
-                        </div>
-                      ))}
-                      <button onClick={() => addDataPackRow("edit")}>Add Data Pack</button>
-                    </>
-                  ) : (
-                    JSON.stringify(plan.dataPacks)
-                  )}
-                </td>
-                <td>
-                  {editPlanId === plan.plan_id ? (
-                    <>
-                      <button onClick={() => handleEditSave(plan.plan_id)}>Save</button>
-                      <button onClick={handleCancelEdit}>Cancel</button>
-                    </>
-                  ) : (
-                    <>
-                      <button onClick={() => handleEditClick(plan)}>Edit</button>
-                      <button onClick={() => handleDelete(plan.plan_id)}>Delete</button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: "20px",
+          }}
+        >
+          {plans.map((plan) => (
+            <div
+              key={plan.plan_id}
+              style={{
+                background: "white",
+                padding: "20px",
+                borderRadius: "15px",
+                boxShadow: "0 5px 15px rgba(107,15,186,0.15)",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                cursor: "default",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.03)";
+                e.currentTarget.style.boxShadow = "0 10px 30px rgba(107,15,186,0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 5px 15px rgba(107,15,186,0.15)";
+              }}
+            >
+              <div style={{ marginBottom: "10px" }}>
+                <strong>Plan ID:</strong>{" "}
+                {editPlanId === plan.plan_id ? (
+                  <input
+                    type="number"
+                    value={editFormData.plan_id}
+                    onChange={(e) => setEditFormData({ ...editFormData, plan_id: Number(e.target.value) })}
+                    style={inputStyle}
+                    disabled
+                  />
+                ) : (
+                  plan.plan_id
+                )}
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <strong>Type:</strong>{" "}
+                {editPlanId === plan.plan_id ? (
+                  <input
+                    type="text"
+                    value={editFormData.planType}
+                    onChange={(e) => setEditFormData({ ...editFormData, planType: e.target.value })}
+                    style={inputStyle}
+                  />
+                ) : (
+                  plan.planType
+                )}
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <strong>Validity (Days):</strong>{" "}
+                {editPlanId === plan.plan_id ? (
+                  <input
+                    type="number"
+                    value={editFormData.validityDays}
+                    onChange={(e) => setEditFormData({ ...editFormData, validityDays: Number(e.target.value) })}
+                    style={inputStyle}
+                  />
+                ) : (
+                  plan.validityDays
+                )}
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <strong>Data Packs:</strong>
+                {editPlanId === plan.plan_id ? (
+                  <>
+                    {editFormData.dataPacks.map((row, idx) => (
+                      <div
+                        key={idx}
+                        style={{ display: "flex", gap: "10px", marginBottom: "8px", alignItems: "center" }}
+                      >
+                        <input
+                          type="text"
+                          placeholder="Price"
+                          value={row.price}
+                          onChange={(e) => updateDataPackRow(idx, "price", e.target.value, "edit")}
+                          style={{ ...inputStyle, width: "120px" }}
+                        />
+                        <input
+                          type="number"
+                          placeholder="MB"
+                          value={row.mb}
+                          onChange={(e) => updateDataPackRow(idx, "mb", e.target.value, "edit")}
+                          style={{ ...inputStyle, width: "120px" }}
+                        />
+                        <button
+                          onClick={() => removeDataPackRow(idx, "edit")}
+                          style={removeBtnStyle}
+                          title="Remove data pack"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ))}
+                    <button onClick={() => addDataPackRow("edit")} style={addBtnStyle}>
+                      + Add Data Pack
+                    </button>
+                  </>
+                ) : (
+                  <ul style={{ marginTop: "5px", paddingLeft: "20px", color: "#555" }}>
+                    {plan.dataPacks.length > 0 ? (
+                      plan.dataPacks.map(({ price, mb }, i) => (
+                        <li key={i}>
+                          Price: ₹{price}, Data: {mb} MB
+                        </li>
+                      ))
+                    ) : (
+                      <li>No Data Packs</li>
+                    )}
+                  </ul>
+                )}
+              </div>
+              <div style={{ marginTop: "15px", display: "flex", gap: "12px" }}>
+                {editPlanId === plan.plan_id ? (
+                  <>
+                    <button onClick={() => handleEditSave(plan.plan_id)} style={saveBtnStyle}>
+                      Save
+                    </button>
+                    <button onClick={handleCancelEdit} style={cancelBtnStyle}>
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => handleEditClick(plan)} style={editBtnStyle}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(plan.plan_id)} style={deleteBtnStyle}>
+                      Delete
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
+};
+
+// Shared input styling
+const inputStyle = {
+  padding: "8px 12px",
+  fontSize: "14px",
+  borderRadius: "6px",
+  border: "1.8px solid #ddd",
+  outline: "none",
+  transition: "border-color 0.3s ease",
+  flex: "1",
+};
+
+const addBtnStyle = {
+  backgroundColor: "#C0392B",
+  color: "white",
+  border: "none",
+  padding: "8px 14px",
+  borderRadius: "8px",
+  cursor: "pointer",
+  fontWeight: "600",
+  transition: "background-color 0.3s ease",
+};
+
+const removeBtnStyle = {
+  backgroundColor: "#e74c3c",
+  color: "white",
+  border: "none",
+  padding: "4px 10px",
+  borderRadius: "50%",
+  fontWeight: "bold",
+  cursor: "pointer",
+  lineHeight: "1",
+  fontSize: "16px",
+};
+
+const submitBtnStyle = {
+  marginTop: "20px",
+  backgroundColor: "#C0392B",
+  color: "white",
+  border: "none",
+  padding: "12px 25px",
+  borderRadius: "10px",
+  fontSize: "16px",
+  cursor: "pointer",
+  fontWeight: "700",
+  boxShadow: "0 5px 15px rgba(107,15,186,0.4)",
+  transition: "background-color 0.3s ease",
+};
+
+const fetchBtnStyle = {
+  backgroundColor: "#C0392B",
+  color: "white",
+  border: "none",
+  padding: "10px 22px",
+  borderRadius: "10px",
+  fontSize: "15px",
+  cursor: "pointer",
+  fontWeight: "600",
+  boxShadow: "0 4px 10px rgba(107,15,186,0.3)",
+  transition: "background-color 0.3s ease",
+};
+
+const editBtnStyle = {
+  backgroundColor: "#C0392B",
+  border: "none",
+  padding: "8px 18px",
+  borderRadius: "8px",
+  color: "white",
+  cursor: "pointer",
+  fontWeight: "600",
+  flex: 1,
+  transition: "background-color 0.3s ease",
+};
+
+const saveBtnStyle = {
+  backgroundColor: "#2ecc71",
+  border: "none",
+  padding: "8px 18px",
+  borderRadius: "8px",
+  color: "white",
+  cursor: "pointer",
+  fontWeight: "600",
+  flex: 1,
+  transition: "background-color 0.3s ease",
+};
+
+const cancelBtnStyle = {
+  backgroundColor: "#95a5a6",
+  border: "none",
+  padding: "8px 18px",
+  borderRadius: "8px",
+  color: "white",
+  cursor: "pointer",
+  fontWeight: "600",
+  flex: 1,
+  transition: "background-color 0.3s ease",
+};
+
+const deleteBtnStyle = {
+  backgroundColor: "#e74c3c",
+  border: "none",
+  padding: "8px 18px",
+  borderRadius: "8px",
+  color: "white",
+  cursor: "pointer",
+  fontWeight: "600",
+  flex: 1,
+  transition: "background-color 0.3s ease",
 };
 
 export default PlansAdmin;

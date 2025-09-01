@@ -42,7 +42,7 @@ function ComplaintDetails() {
       >
         <h2
           style={{
-            color: "#d6366c",
+            color: "#C0392B",
             marginBottom: "25px",
             fontSize: "1.9rem",
             fontWeight: "600",
@@ -87,7 +87,7 @@ function ComplaintDetails() {
                     width: "55px",
                     height: "55px",
                     borderRadius: "50%",
-                    background: isCompleted ? "#d6366c" : "#e0e0e0",
+                    background: isCompleted ? "#C0392B" : "#e0e0e0",
                     color: "#fff",
                     display: "flex",
                     alignItems: "center",
@@ -104,7 +104,7 @@ function ComplaintDetails() {
                 <p
                   style={{
                     marginTop: "10px",
-                    color: isActive ? "#d6366c" : "#555",
+                    color: isActive ? "#C0392B" : "#555",
                     fontWeight: isActive ? "bold" : "normal",
                   }}
                 >
@@ -119,7 +119,7 @@ function ComplaintDetails() {
                       left: "50%",
                       width: "100%",
                       height: "4px",
-                      background: isCompleted ? "#d6366c" : "#ccc",
+                      background: isCompleted ? "#C0392B" : "#ccc",
                       zIndex: 0,
                       transition: "0.3s",
                     }}

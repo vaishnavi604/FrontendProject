@@ -1,61 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Card from "../components/Card";
-<<<<<<< HEAD
-import { GoogleGenerativeAI } from "@google/generative-ai";
-=======
->>>>>>> origin/master
 
 export default function LandingPage() {
   const [chatOpen, setChatOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-
-<<<<<<< HEAD
-  // ✅ Chatbot states
+  const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     { sender: "bot", text: "Hello 👋! How can I help you today?" },
   ]);
-  const [input, setInput] = useState("");
 
-  // ✅ Gemini API setup (use .env key)
-  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  const handleSend = async () => {
-    if (!input.trim()) return;
-
-    // Add user message
-    setMessages((prev) => [...prev, { sender: "user", text: input }]);
-
-    try {
-      // Call Gemini
-      const result = await model.generateContent(input);
-      const reply = result.response.text();
-
-      setMessages((prev) => [...prev, { sender: "bot", text: reply }]);
-    } catch (err) {
-      console.error("Gemini API Error:", err);
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "⚠️ Sorry, I couldn’t process that. Try again." },
-      ]);
-    }
-
-    setInput(""); // clear input
-  };
-
+  // Image carousel for hero section
   const images = [
     "https://i.pinimg.com/1200x/26/57/6e/26576e68a11261e3945df1ec23cf1f78.jpg",
-    "https://i.pinimg.com/1200x/68/82/6a/68826ab01b6ee5ba9a6f1ee9cc1f6598.jpg",
     "https://i.pinimg.com/1200x/87/6c/1b/876c1b73d4b7d92413e9cdee227a3411.jpg",
-    
-=======
-  const images = [
-    "https://www.cloudtern.com/wp-content/uploads/2023/07/telecom_digital-twin.jpg",
-    "https://idsb.tmgrup.com.tr/ly/uploads/images/2020/10/23/67197.jpg",
-    "https://www.equipment-hq.co.uk/wp-content/uploads/2020/07/5g-network-architecture.jpg",
->>>>>>> origin/master
   ];
 
   useEffect(() => {
@@ -65,12 +24,30 @@ export default function LandingPage() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleSend = async () => {
+    if (!input.trim()) return;
+
+    // Add user message
+    setMessages((prev) => [...prev, { sender: "user", text: input }]);
+
+    try {
+      // Example bot response, replace this with actual API call
+      const reply = `You said: ${input}`;
+
+      setMessages((prev) => [...prev, { sender: "bot", text: reply }]);
+    } catch (err) {
+      console.error("Error:", err);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "⚠️ Sorry, I couldn’t process that. Try again." },
+      ]);
+    }
+
+    setInput(""); // clear input
+  };
+
   return (
-<<<<<<< HEAD
     <div style={{ fontFamily: "'Poppins', sans-serif", backgroundColor: "#FFFFFF", color: "#333" }}>
-=======
-    <div style={{ fontFamily: "Arial, sans-serif", backgroundColor: "#FFFFFF", color: "#333" }}>
->>>>>>> origin/master
       <Header />
 
       {/* Hero Section */}
@@ -106,7 +83,7 @@ export default function LandingPage() {
         <div style={{ zIndex: 2, maxWidth: "600px" }}>
           <h1 style={{ fontSize: "3.5rem", fontWeight: "bold", marginBottom: "20px" }}>
             TV on Every Screen. <br />
-            <span style={{ color: "#FF4C4C" }}>Fast Internet.</span>
+            <span style={{ color: "#C0392B" }}>Fast Internet.</span>
           </h1>
           <p style={{ fontSize: "1.2rem", marginBottom: "20px" }}>
             $75 <span style={{ fontWeight: 300 }}>/ per month</span>
@@ -116,7 +93,7 @@ export default function LandingPage() {
           </p>
           <button
             style={{
-              backgroundColor: "#FF4C4C",
+              backgroundColor: "#C0392B",  // Red button
               color: "#fff",
               border: "none",
               padding: "12px 24px",
@@ -124,25 +101,17 @@ export default function LandingPage() {
               fontWeight: "bold",
               borderRadius: "25px",
               cursor: "pointer",
-<<<<<<< HEAD
               transition: "transform 0.3s ease",
             }}
             onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
             onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-=======
-            }}
->>>>>>> origin/master
           >
             Learn More
           </button>
         </div>
       </section>
 
-<<<<<<< HEAD
       {/* Services Section */}
-=======
-      {/* Services Section with Cards */}
->>>>>>> origin/master
       <section
         style={{
           padding: "60px 20px",
@@ -150,15 +119,119 @@ export default function LandingPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          animation: "fadeIn 1.5s ease-out",
         }}
       >
-        <h2 style={{ fontSize: "2.5rem", color: "#C0392B", marginBottom: "30px" }}>
-          Explore Our Services
+        <h2 style={{ fontSize: "2.5rem", color: "#C0392B", marginBottom: "30px" }}>Explore Our Services</h2>
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+            justifyContent: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          <Card
+            title="Fast Internet"
+            description="Experience lightning-fast speeds."
+            style={{
+              transition: "transform 0.3s ease",
+            }}
+          />
+          <Card
+            title="Reliable Support"
+            description="24/7 customer support available."
+            style={{
+              transition: "transform 0.3s ease",
+            }}
+          />
+          <Card
+            title="Affordable Plans"
+            description="Choose a plan that fits your needs."
+            style={{
+              transition: "transform 0.3s ease",
+            }}
+          />
+        </div>
+      </section>
+
+      {/* Scrollable Page */}
+      <section
+        style={{
+          height: "100vh",
+          overflowY: "scroll",
+          backgroundColor: "#FFFFFF",
+          color: "#333",
+          padding: "40px",
+        }}
+      >
+        <h2
+          style={{
+            color: "#C0392B",  // Red title
+            marginBottom: "20px",
+            fontSize: "2.5rem",
+            textAlign: "center",
+          }}
+        >
+          Our Exciting New Features
         </h2>
-        <div style={{ display: "flex", gap: "20px", justifyContent: "center", flexWrap: "wrap" }}>
-          <Card title="Fast Internet" description="Experience lightning-fast speeds." />
-          <Card title="Reliable Support" description="24/7 customer support available." />
-          <Card title="Affordable Plans" description="Choose a plan that fits your needs." />
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            animation: "fadeIn 2s ease-out",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "400px",
+              textAlign: "center",
+              padding: "10px",
+              transform: "scale(1)",
+              transition: "transform 0.3s ease",
+            }}
+            onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+            onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
+          >
+            <img
+              src="https://via.placeholder.com/300"
+              alt="Feature 1"
+              style={{
+                width: "100%",
+                borderRadius: "12px",
+                marginBottom: "20px",
+                animation: "fadeIn 2s ease-out",
+              }}
+            />
+            <h3>Super Fast Streaming</h3>
+            <p>Stream in HD and 4K without interruptions, anywhere you go!</p>
+          </div>
+          <div
+            style={{
+              maxWidth: "400px",
+              textAlign: "center",
+              padding: "10px",
+              transform: "scale(1)",
+              transition: "transform 0.3s ease",
+            }}
+            onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+            onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
+          >
+            <img
+              src="https://via.placeholder.com/300"
+              alt="Feature 2"
+              style={{
+                width: "100%",
+                borderRadius: "12px",
+                marginBottom: "20px",
+                animation: "fadeIn 2s ease-out",
+              }}
+            />
+            <h3>Always On Support</h3>
+            <p>Our team is always ready to assist you 24/7 for any issues.</p>
+          </div>
         </div>
       </section>
 
@@ -191,7 +264,6 @@ export default function LandingPage() {
               Chatbot
             </div>
             <div style={{ flex: 1, padding: "10px", overflowY: "auto" }}>
-<<<<<<< HEAD
               {messages.map((msg, idx) => (
                 <p
                   key={idx}
@@ -229,7 +301,7 @@ export default function LandingPage() {
               <button
                 onClick={handleSend}
                 style={{
-                  background: "#C0392B",
+                  background: "#C0392B",  // Red button
                   border: "none",
                   color: "#fff",
                   padding: "0 15px",
@@ -239,28 +311,12 @@ export default function LandingPage() {
                 ➤
               </button>
             </div>
-=======
-              <p>Hello 👋! How can I help you today?</p>
-            </div>
-            <input
-              type="text"
-              placeholder="Type a message..."
-              style={{
-                border: "none",
-                borderTop: "1px solid #444",
-                padding: "10px",
-                background: "#0B0F1A",
-                color: "#fff",
-                outline: "none",
-              }}
-            />
->>>>>>> origin/master
           </div>
         )}
         <button
           onClick={() => setChatOpen(!chatOpen)}
           style={{
-            background: "#C0392B",
+            background: "#C0392B",  // Red button
             color: "#FFFFFF",
             border: "none",
             borderRadius: "50%",
@@ -279,8 +335,3 @@ export default function LandingPage() {
     </div>
   );
 }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> origin/master

@@ -11,14 +11,11 @@ import ComplaintsPage from "./pages/ComplaintsPage";
 import ComplaintDetails from "./pages/ComplaintDetails";
 import PlanDetailsPage from "./pages/PlanDetailsPage";
 import PostpaidPlanDetailsPage from "./pages/PostpaidPlanDetailsPage";
-<<<<<<< HEAD
-=======
 import AdminDashboard from "./pages/AdminDashboard";
-import PlansAdmin from "./pages/Plansadmin"; 
+import PlansAdmin from "./pages/PlansAdmin"; 
 import RechargesAdmin from "./pages/RechargesAdmin";
 import ComplaintsAdmin from "./pages/ComplaintsAdmin"; 
 
->>>>>>> origin/master
 
 import { AuthProvider } from "./context/AuthContext";
 
@@ -37,20 +34,14 @@ export default function App() {
       <Route path="/postpaid" element={<PostpaidPlansPage />} />
      <Route path="/complaints" element={<ComplaintsPage />} />
 <Route path="/complaint-details" element={<ComplaintDetails />} />
-  <Route path="/postpaid-plan/:id" element={<PostpaidPlanDetailsPage />} />
-<<<<<<< HEAD
+  <Route path="/postpaid-plan" element={<PostpaidPlanDetailsPage />} />
         <Route path="/plan-details" element={<PlanDetailsPage />} />
-
-=======
-        <Route path="/plan/:id" element={<PlanDetailsPage />} />
-
            <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/plans" element={<PlansAdmin />} />
           <Route path="/admin/recharges" element={<RechargesAdmin />} />
           <Route path="/admin/complaints" element={<ComplaintsAdmin />} />
   
     
->>>>>>> origin/master
     </Routes>
     </AuthProvider>
   );

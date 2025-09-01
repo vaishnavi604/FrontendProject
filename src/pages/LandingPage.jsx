@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Card from "../components/Card";
+<<<<<<< HEAD
 import { GoogleGenerativeAI } from "@google/generative-ai";
+=======
+>>>>>>> origin/master
 
 export default function LandingPage() {
   const [chatOpen, setChatOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
+<<<<<<< HEAD
   // ✅ Chatbot states
   const [messages, setMessages] = useState([
     { sender: "bot", text: "Hello 👋! How can I help you today?" },
@@ -46,6 +50,12 @@ export default function LandingPage() {
     "https://i.pinimg.com/1200x/68/82/6a/68826ab01b6ee5ba9a6f1ee9cc1f6598.jpg",
     "https://i.pinimg.com/1200x/87/6c/1b/876c1b73d4b7d92413e9cdee227a3411.jpg",
     
+=======
+  const images = [
+    "https://www.cloudtern.com/wp-content/uploads/2023/07/telecom_digital-twin.jpg",
+    "https://idsb.tmgrup.com.tr/ly/uploads/images/2020/10/23/67197.jpg",
+    "https://www.equipment-hq.co.uk/wp-content/uploads/2020/07/5g-network-architecture.jpg",
+>>>>>>> origin/master
   ];
 
   useEffect(() => {
@@ -56,7 +66,11 @@ export default function LandingPage() {
   }, []);
 
   return (
+<<<<<<< HEAD
     <div style={{ fontFamily: "'Poppins', sans-serif", backgroundColor: "#FFFFFF", color: "#333" }}>
+=======
+    <div style={{ fontFamily: "Arial, sans-serif", backgroundColor: "#FFFFFF", color: "#333" }}>
+>>>>>>> origin/master
       <Header />
 
       {/* Hero Section */}
@@ -110,17 +124,25 @@ export default function LandingPage() {
               fontWeight: "bold",
               borderRadius: "25px",
               cursor: "pointer",
+<<<<<<< HEAD
               transition: "transform 0.3s ease",
             }}
             onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
             onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+=======
+            }}
+>>>>>>> origin/master
           >
             Learn More
           </button>
         </div>
       </section>
 
+<<<<<<< HEAD
       {/* Services Section */}
+=======
+      {/* Services Section with Cards */}
+>>>>>>> origin/master
       <section
         style={{
           padding: "60px 20px",
@@ -169,6 +191,7 @@ export default function LandingPage() {
               Chatbot
             </div>
             <div style={{ flex: 1, padding: "10px", overflowY: "auto" }}>
+<<<<<<< HEAD
               {messages.map((msg, idx) => (
                 <p
                   key={idx}
@@ -216,6 +239,22 @@ export default function LandingPage() {
                 ➤
               </button>
             </div>
+=======
+              <p>Hello 👋! How can I help you today?</p>
+            </div>
+            <input
+              type="text"
+              placeholder="Type a message..."
+              style={{
+                border: "none",
+                borderTop: "1px solid #444",
+                padding: "10px",
+                background: "#0B0F1A",
+                color: "#fff",
+                outline: "none",
+              }}
+            />
+>>>>>>> origin/master
           </div>
         )}
         <button
@@ -240,5 +279,8 @@ export default function LandingPage() {
     </div>
   );
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/master

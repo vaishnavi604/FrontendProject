@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@google/generative-ai": "^0.24.1",
+=======
+>>>>>>> origin/master
     "axios": "^1.11.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

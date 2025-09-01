@@ -26,10 +26,13 @@
     transform: rotate(360deg);
   }
 }
+<<<<<<< HEAD
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+=======
+>>>>>>> origin/master
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {

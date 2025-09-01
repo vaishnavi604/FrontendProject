@@ -21,7 +21,11 @@ function Header() {
     >
       {/* Left side */}
       <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+<<<<<<< HEAD
         <h1 style={{ fontSize: "24px", fontWeight: "bold", color: redShade }}>WeZen</h1>
+=======
+        <h1 style={{ fontSize: "24px", fontWeight: "bold", color: redShade }}>Wezen</h1>
+>>>>>>> origin/master
         <Link
           to="/explore"
           style={{ textDecoration: "none", color: "#333333", fontWeight: "500" }}

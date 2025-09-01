@@ -1,15 +1,59 @@
 import React, { useState } from "react";
 import { FaUser, FaEnvelope, FaTag, FaCommentDots } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function ComplaintsPage() {
-  const [form, setForm] = useState({ name: "", email: "", category: "", description: "" });
-
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Redirect with state
-    window.location.href = `/complaint-details?id=12345&name=${form.name}&category=${form.category}`;
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    category: "",
+    subject: "",
+    description: "",
+    priority: "LOW", // default
+  });
+  // handle form changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userId = userInfo.userId; // ✅ get from storage
+
+    if (!userId) {
+      alert("User not logged in. Please login first.");
+      return;
+    }
+
+    const complaintPayload = {
+      userId: parseInt(userId), // make sure it’s a number
+      category: formData.category,
+      subject: formData.subject,
+      description: formData.description,
+      priority: formData.priority,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8084/api/api/complaints/addComplaint", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(complaintPayload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create complaint");
+      }
+
+      // ✅ success → redirect to complaint details page
+      navigate("/complaint-details");
+    } catch (error) {
+      console.error("Error submitting complaint:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
 
   return (
     <div style={{
@@ -29,24 +73,17 @@ function ComplaintsPage() {
       }}>
         <h2 style={{ textAlign: "center", color: "#d6366c", marginBottom: "30px" }}>📝 Submit a Complaint</h2>
 
-        <div style={inputWrapper}>
-          <FaUser style={iconStyle} />
-          <input name="name" value={form.name} onChange={handleChange} placeholder="Full Name" style={inputStyle} />
-        </div>
         
-        <div style={inputWrapper}>
-          <FaEnvelope style={iconStyle} />
-          <input name="email" value={form.email} onChange={handleChange} placeholder="Email" style={inputStyle} />
-        </div>
+        
         
         <div style={inputWrapper}>
           <FaTag style={iconStyle} />
-          <input name="category" value={form.category} onChange={handleChange} placeholder="Category (e.g., Network, Billing)" style={inputStyle} />
+          <input name="category" value={formData.category} onChange={handleChange} placeholder="Category (e.g., Network, Billing)" style={inputStyle} />
         </div>
         
         <div style={inputWrapper}>
           <FaCommentDots style={iconStyle} />
-          <textarea name="description" value={form.description} onChange={handleChange} placeholder="Describe your issue" style={{ ...inputStyle, height: "100px" }} />
+          <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Describe your issue" style={{ ...inputStyle, height: "100px" }} />
         </div>
 
         <button type="submit" style={buttonStyle}>🚀 Submit</button>

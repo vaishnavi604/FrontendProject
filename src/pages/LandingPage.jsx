@@ -2,15 +2,50 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Card from "../components/Card";
-import Chatbot from "../components/Chatbot"; // ✅ import
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export default function LandingPage() {
+  const [chatOpen, setChatOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
+  // ✅ Chatbot states
+  const [messages, setMessages] = useState([
+    { sender: "bot", text: "Hello 👋! How can I help you today?" },
+  ]);
+  const [input, setInput] = useState("");
+
+  // ✅ Gemini API setup (use .env key)
+  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const handleSend = async () => {
+    if (!input.trim()) return;
+
+    // Add user message
+    setMessages((prev) => [...prev, { sender: "user", text: input }]);
+
+    try {
+      // Call Gemini
+      const result = await model.generateContent(input);
+      const reply = result.response.text();
+
+      setMessages((prev) => [...prev, { sender: "bot", text: reply }]);
+    } catch (err) {
+      console.error("Gemini API Error:", err);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "⚠️ Sorry, I couldn’t process that. Try again." },
+      ]);
+    }
+
+    setInput(""); // clear input
+  };
+
   const images = [
-    "https://www.cloudtern.com/wp-content/uploads/2023/07/telecom_digital-twin.jpg",
-    "https://idsb.tmgrup.com.tr/ly/uploads/images/2020/10/23/67197.jpg",
-    "https://www.equipment-hq.co.uk/wp-content/uploads/2020/07/5g-network-architecture.jpg",
+    "https://i.pinimg.com/1200x/26/57/6e/26576e68a11261e3945df1ec23cf1f78.jpg",
+    "https://i.pinimg.com/1200x/68/82/6a/68826ab01b6ee5ba9a6f1ee9cc1f6598.jpg",
+    "https://i.pinimg.com/1200x/87/6c/1b/876c1b73d4b7d92413e9cdee227a3411.jpg",
+    
   ];
 
   useEffect(() => {
@@ -21,7 +56,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", backgroundColor: "#FFFFFF", color: "#333" }}>
+    <div style={{ fontFamily: "'Poppins', sans-serif", backgroundColor: "#FFFFFF", color: "#333" }}>
       <Header />
 
       {/* Hero Section */}
@@ -40,6 +75,7 @@ export default function LandingPage() {
           transition: "background-image 1s ease-in-out",
         }}
       >
+        {/* Overlay */}
         <div
           style={{
             position: "absolute",
@@ -51,6 +87,8 @@ export default function LandingPage() {
             zIndex: 1,
           }}
         />
+
+        {/* Hero Text */}
         <div style={{ zIndex: 2, maxWidth: "600px" }}>
           <h1 style={{ fontSize: "3.5rem", fontWeight: "bold", marginBottom: "20px" }}>
             TV on Every Screen. <br />
@@ -72,14 +110,17 @@ export default function LandingPage() {
               fontWeight: "bold",
               borderRadius: "25px",
               cursor: "pointer",
+              transition: "transform 0.3s ease",
             }}
+            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             Learn More
           </button>
         </div>
       </section>
 
-      {/* Services Section with Cards */}
+      {/* Services Section */}
       <section
         style={{
           padding: "60px 20px",
@@ -99,10 +140,105 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ✅ Chatbot included */}
-      <Chatbot />
+      {/* Chatbot */}
+      <div style={{ position: "fixed", bottom: "20px", right: "20px", zIndex: 10 }}>
+        {chatOpen && (
+          <div
+            style={{
+              width: "300px",
+              height: "400px",
+              background: "#1A1F2A",
+              border: "1px solid #444",
+              borderRadius: "10px",
+              boxShadow: "0 4px 8px rgba(0,0,0,0.4)",
+              display: "flex",
+              flexDirection: "column",
+              color: "#fff",
+            }}
+          >
+            <div
+              style={{
+                background: "#C0392B",
+                color: "#FFFFFF",
+                padding: "10px",
+                borderTopLeftRadius: "10px",
+                borderTopRightRadius: "10px",
+                fontWeight: "bold",
+              }}
+            >
+              Chatbot
+            </div>
+            <div style={{ flex: 1, padding: "10px", overflowY: "auto" }}>
+              {messages.map((msg, idx) => (
+                <p
+                  key={idx}
+                  style={{
+                    textAlign: msg.sender === "user" ? "right" : "left",
+                    background: msg.sender === "user" ? "#C0392B" : "#2C3E50",
+                    display: "inline-block",
+                    padding: "8px 12px",
+                    borderRadius: "12px",
+                    margin: "5px 0",
+                    maxWidth: "80%",
+                  }}
+                >
+                  {msg.text}
+                </p>
+              ))}
+            </div>
+            <div style={{ display: "flex" }}>
+              <input
+                type="text"
+                placeholder="Type a message..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                style={{
+                  flex: 1,
+                  border: "none",
+                  borderTop: "1px solid #444",
+                  padding: "10px",
+                  background: "#0B0F1A",
+                  color: "#fff",
+                  outline: "none",
+                }}
+              />
+              <button
+                onClick={handleSend}
+                style={{
+                  background: "#C0392B",
+                  border: "none",
+                  color: "#fff",
+                  padding: "0 15px",
+                  cursor: "pointer",
+                }}
+              >
+                ➤
+              </button>
+            </div>
+          </div>
+        )}
+        <button
+          onClick={() => setChatOpen(!chatOpen)}
+          style={{
+            background: "#C0392B",
+            color: "#FFFFFF",
+            border: "none",
+            borderRadius: "50%",
+            width: "60px",
+            height: "60px",
+            fontSize: "1.5rem",
+            cursor: "pointer",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.5)",
+          }}
+        >
+          💬
+        </button>
+      </div>
 
       <Footer />
     </div>
   );
 }
+
+

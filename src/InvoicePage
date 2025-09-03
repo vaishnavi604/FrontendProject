@@ -1,0 +1,59 @@
+import React from "react";
+import { jsPDF } from "jspdf";
+import emailjs from "emailjs-com";
+
+export default function InvoicePage() {
+  const sendInvoice = async () => {
+    // ✅ Mock user mail (normally from localStorage)
+    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {
+      mail: "testuser@example.com",
+    };
+    const userEmail = userInfo.mail;
+
+    // ✅ Mock invoice data
+    const invoiceData = {
+      id: "INV-001",
+      name: "John Doe",
+      amount: "₹1500",
+      date: new Date().toLocaleDateString(),
+    };
+
+    // ✅ Generate PDF
+    const doc = new jsPDF();
+    doc.text("INVOICE", 20, 20);
+    doc.text(`Invoice ID: ${invoiceData.id}`, 20, 40);
+    doc.text(`Customer: ${invoiceData.name}`, 20, 50);
+    doc.text(`Amount: ${invoiceData.amount}`, 20, 60);
+    doc.text(`Date: ${invoiceData.date}`, 20, 70);
+
+    // Convert PDF to base64
+    const pdfBase64 = doc.output("datauristring");
+
+    // ✅ Send via EmailJS npm install jspdf emailjs-com
+    try {
+      await emailjs.send(
+        "your_service_id", // replace with EmailJS Service ID
+        "your_template_id", // replace with EmailJS Template ID
+        {
+          to_email: userEmail,
+          subject: "Your Invoice",
+          message: "Here is your invoice!",
+          attachment: pdfBase64,
+        },
+        "your_user_id" // replace with your EmailJS Public Key
+      );
+      alert("Invoice sent to " + userEmail);
+    } catch (err) {
+      console.error("Error sending email:", err);
+    }
+  };
+
+  return (
+    <div style={{ padding: "2rem" }}>
+      <h2>Generate & Send Invoice</h2>
+      <button onClick={sendInvoice} style={{ padding: "0.5rem 1rem" }}>
+        Send Invoice
+      </button>
+    </div>
+  );
+}
